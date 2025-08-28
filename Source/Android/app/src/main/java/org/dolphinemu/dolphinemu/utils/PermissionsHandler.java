@@ -6,6 +6,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.Settings;
 import android.os.Environment;
 
 import androidx.core.content.ContextCompat;
@@ -13,6 +16,8 @@ import androidx.fragment.app.FragmentActivity;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.Manifest.permission.RECORD_AUDIO;
+import static android.Manifest.permission.MANAGE_EXTERNAL_STORAGE;
+import android.os.Environment;
 
 import org.dolphinemu.dolphinemu.R;
 import org.dolphinemu.dolphinemu.DolphinApplication;
@@ -29,6 +34,14 @@ public class PermissionsHandler
     if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
       return;
 
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+      Uri uri = Uri.fromParts("package", activity.getPackageName(), null);
+      intent.setData(uri);
+      activity.startActivityForResult(intent, REQUEST_CODE_WRITE_PERMISSION);
+      return;
+    }
+
     activity.requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE},
             REQUEST_CODE_WRITE_PERMISSION);
   }
@@ -38,8 +51,9 @@ public class PermissionsHandler
     if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
       return true;
 
-    if (!isExternalStorageLegacy())
-      return false;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      return Environment.isExternalStorageManager();
+    }
 
     int hasWritePermission = ContextCompat.checkSelfPermission(context, WRITE_EXTERNAL_STORAGE);
     return hasWritePermission == PackageManager.PERMISSION_GRANTED;

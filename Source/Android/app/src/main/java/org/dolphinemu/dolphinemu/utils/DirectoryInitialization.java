@@ -98,7 +98,7 @@ public final class DirectoryInitialization
     if (externalPath == null)
       return null;
 
-    return new File(externalPath, "dolphin-emu");
+    return new File(externalPath, "Dolphin");
   }
 
   @Nullable public static File getUserDirectoryPath(Context context)
@@ -366,9 +366,7 @@ public final class DirectoryInitialization
 
   private static boolean preferLegacyUserDirectory(Context context)
   {
-    return PermissionsHandler.isExternalStorageLegacy() &&
-            !PermissionsHandler.isWritePermissionDenied() && isExternalFilesDirEmpty(context) &&
-            legacyUserDirectoryExists();
+    return true;
   }
 
   public static boolean isUsingLegacyUserDirectory()
