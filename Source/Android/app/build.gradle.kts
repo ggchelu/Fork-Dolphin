@@ -83,9 +83,7 @@ android {
         // Signed by debug key disallowing distribution on Play Store.
         // Attaches "debug" suffix to version and package name, allowing installation alongside the release build.
         debug {
-            resValue("string", "app_name_suffixed", "Dolphin Debug")
-            applicationIdSuffix = ".debug"
-            versionNameSuffix = "-debug"
+            resValue("string", "app_name_suffixed", "Dolphin Emulator")
             isJniDebuggable = true
         }
     }
